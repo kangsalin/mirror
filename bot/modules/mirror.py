@@ -1,4 +1,3 @@
-import requests
 from telegram.ext import CommandHandler
 from telegram import InlineKeyboardMarkup
 
@@ -32,6 +31,7 @@ import random
 import string
 import time
 import shutil
+import requests
 
 ariaDlManager = AriaDownloadHelper()
 ariaDlManager.start_listener()
@@ -154,11 +154,15 @@ class MirrorListener(listeners.MirrorListeners):
 
     def onUploadComplete(self, link: str, size, files, folders, typ):
         with download_dict_lock:
+            URL = "http://ouo.io/api/ARlk1o6H?s=" + link
+            res = requests.get(URL).text
             msg = f'<b>☞ 📂Filename : </b><code>{download_dict[self.uid].name()}</code>\n<b>☞ 📦Size : </b><code>{size}</code>'
             if os.path.isdir(f'{DOWNLOAD_DIR}/{self.uid}/{download_dict[self.uid].name()}'):
                 msg += '\n<b>☞ 🌀Type : </b><code>Folder</code>'
+                msg += f'\n<b>☞ 🗳link :</b><code>{res}</code>'
                 msg += f'\n<b>☞ 🗳Powerd by : @budy_RangerDark</b>'
             else:
+                msg += f'\n<b>☞ 🗳link :</b><code>{res}</code>'
                 msg += f'\n<b>☞ 🗳Powerd by : @budy_RangerDark</b>'
             buttons = button_build.ButtonMaker()
             if SHORTENER is not None and SHORTENER_API is not None:
